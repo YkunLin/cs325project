@@ -27,7 +27,7 @@ Follow these steps to set up the project:
 
 4. Activate the environment
 
-   command: conda activate name_of_the_environment
+   command: conda activate env1
 
 
 
