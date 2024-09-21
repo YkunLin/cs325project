@@ -17,10 +17,10 @@ and writes the model's responses to 'responses.txt' file.
 Follow these steps to set up the project:
 1. Download all required files: 
 
-        'main.py'
-        'prompts.txt'
-        'responses.txt'
-        'requirements.yaml'
+        main.py
+        prompts.txt
+        responses.txt
+        requirements.yaml
 
 3. Use conda to create the environment from the requirements.yaml file.
 
