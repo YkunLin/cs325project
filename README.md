@@ -22,7 +22,7 @@ Follow these steps to set up the project:
         requirements.yaml
 
 2. Use conda to create the environment from the requirements.yaml file.
-        command: condad env create -f requirements.yaml
+        command: conda env create -f requirements.yaml
 
 3. Activate the environment
         command: conda activate name_of_the_environment
