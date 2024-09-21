@@ -1,5 +1,5 @@
-import ollama
-import textwrap
+import ollama #Imports the ollama library, to interact with the phi3 model
+import textwrap #Imports the textwrap module, used to format responses
 
 def read_prompts(filename):
     with open(filename, 'r') as file:
