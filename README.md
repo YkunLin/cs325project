@@ -1,4 +1,4 @@
-# Cs325project1 - Phi3 interaction project
+# Cs325_Project1 - Phi3 interaction project
 
 ## Overview
 This project demonstrates how to interact with the phi-3 model on a local machine by
