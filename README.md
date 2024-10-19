@@ -11,7 +11,7 @@ This project is a web scraper designed to extract product reviews from eBay. It 
 3. Saves the reviews in separate files for different product series
 
 ## Prerequisites
-Conda installed
+- Conda installed
 
 ## Installation
 
