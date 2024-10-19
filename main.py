@@ -1,12 +1,17 @@
-from bs4 import BeautifulSoup
-import requests
+from bs4 import BeautifulSoup # Import BeautifulSoup for HTML parsing
+import requests # Import requests for making HTTP requests
 
+#scrape reviews from the webpage
 def scrape_reviews(url):
+    # Make a GET request to the specified URL
     result = requests.get(url)
+
+    # Parse the HTML content of the page using BeautifulSoup
     soup = BeautifulSoup(result.text, "html.parser")
 
-    # Find all review sections
+    # Find all review sections on the page
     review_sections = soup.find_all("div", class_="ebay-review-section")
+    
     # Create a list to hold all reviews
     reviews = []
 
@@ -22,16 +27,19 @@ def scrape_reviews(url):
         if description.endswith("Read full review..."):
             description = description.replace("Read full review...", "").strip()
 
-        # Append the review to the list
+        # Append the review(title and description) to the reviews list
         reviews.append({
         "title": title,
         "description": description
         })
+        
+    # Return the list of reviews
     return reviews
 
 def save_reviews_to_file(reviews, filename):
-    # Append reviews to the existing file
+    # Append reviews to the existing file(watch#_comments.txt)
     with open(filename, 'a', encoding='utf-8') as file:
+         # Loop through each review in the reviews list
         for review in reviews:
             file.write(f"Title: {review['title']}\n")
             file.write(f"Description: {review['description']}\n")
@@ -57,18 +65,21 @@ def main():
     for filename in filenames.values():
         with open(filename, 'w', encoding='utf-8') as file:
             file.write("")  # Open the file in 'w' mode to clear its content
-    
+            
+    # Loop through each URL in the list of URLs
     for url in urls:
         url = url.strip()  # Remove any leading/trailing whitespace
-        if url:  # Check if the line is not empty
-            print(f"Scraping {url}...")
+        if url:  # Check if the URL line is not empty
+            print(f"Scraping {url}...") #print the URL is being scraped
+            
             # Extract product name from the URL
             product_name = url.split('/')[4]  # Get the part of the URL representing the product
             product_series = "-".join(product_name.split('-')[:4])  # Get the product series (e.g., Apple Watch Series 7)
             
             # Determine the appropriate filename
             filename = filenames.get(product_series)
-            if filename:
+            
+            if filename: #check if the series is 4-8
                 reviews = scrape_reviews(url)
                 save_reviews_to_file(reviews, filename)
             else:
