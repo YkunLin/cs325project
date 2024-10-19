@@ -25,7 +25,7 @@ Follow these steps to set up the project:
         watch6_comments.txt
         watch7_comments.txt
         watch8_comments.txt
-        requirements.yaml
+        requirement.yaml
 
 2. Use conda to create the environment from the requirement.yaml file.
 
