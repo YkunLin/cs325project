@@ -5,8 +5,11 @@ This project is a web scraper designed to extract product reviews from eBay. It 
 
 ## Features
 Scrape reviews from multiple eBay URLs for the Apple Watch series
+
 Extracts review titles and review descriptions
+
 Saves the reviews in separate files for different product series
+
 ## prerequisites
 Conda installed
 
