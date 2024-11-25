@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 
 class ReviewScraper:
     """Class for scraping and saving reviews."""
-    def __init__(self, urls_file, output_dir):
+    def __init__(self, urls_file, filenames):
         self.urls_file = urls_file
-        self.output_dir = output_dir
+        self.filenames = filenames  # Pre-existing filenames to save reviews
 
     def scrape_reviews(self, url):
         """Scrape reviews from the given URL."""
@@ -26,10 +26,14 @@ class ReviewScraper:
             reviews.append(f"{title}: {description}")
         return reviews
 
-    def save_reviews(self, reviews, filename):
-        """Save reviews to a file."""
-        with open(filename, 'w', encoding='utf-8') as file:
-            file.write("\n".join(reviews))
+    def save_reviews(self, reviews, product_series):
+        """Save reviews to the pre-existing file based on product series."""
+        filename = self.filenames.get(product_series)
+        if filename:
+            with open(filename, 'a', encoding='utf-8') as file:
+                file.write("\n".join(reviews) + "\n---\n")  # Append reviews to the file with a separator
+        else:
+            print(f"No file mapping for product series: {product_series}")
 
     def run(self):
         """Scrape and save reviews from all URLs."""
@@ -38,9 +42,9 @@ class ReviewScraper:
         for url in urls:
             url = url.strip()
             product_name = url.split('/')[4]
-            filename = os.path.join(self.output_dir, f"{product_name}_comments.txt")
+            product_series = "-".join(product_name.split('-')[:4])  # Get the product series (e.g., Apple Watch Series 7)
             reviews = self.scrape_reviews(url)
-            self.save_reviews(reviews, filename)
+            self.save_reviews(reviews, product_series)
 
 
 class SentimentAnalyzer:
@@ -101,24 +105,30 @@ class SentimentPlotter:
 
 
 def main():
+    # Pre-existing filenames for each product series
+    filenames = {
+        "Apple-Watch-Series-8": "watch8_comments.txt",
+        "Apple-Watch-Series-7": "watch7_comments.txt",
+        "Apple-Watch-Series-6": "watch6_comments.txt",
+        "Apple-Watch-Series-5": "watch5_comments.txt",
+        "Apple-Watch-Series-4": "watch4_comments.txt"
+    }
+
     # Step 1: Scrape reviews
-    scraper = ReviewScraper(urls_file='product_URL.txt', output_dir='comments')
+    scraper = ReviewScraper(urls_file='product_URL.txt', filenames=filenames)
     scraper.run()
 
     # Step 2: Analyze sentiments
     analyzer = SentimentAnalyzer()
     sentiments_per_device = {}
-    comments_dir = 'comments'
-    results_dir = 'sentiments'
 
-    os.makedirs(results_dir, exist_ok=True)
-
-    for file in os.listdir(comments_dir):
-        input_file = os.path.join(comments_dir, file)
-        output_file = os.path.join(results_dir, f"{os.path.splitext(file)[0]}_sentiments.txt")
-        sentiments = analyzer.process_comments_file(input_file, output_file)
-        device_name = os.path.splitext(file)[0]
-        sentiments_per_device[device_name] = sentiments
+    for file in os.listdir():
+        if file.endswith("_comments.txt"):
+            input_file = file
+            output_file = f"{os.path.splitext(file)[0]}_sentiments.txt"
+            sentiments = analyzer.process_comments_file(input_file, output_file)
+            device_name = os.path.splitext(file)[0]
+            sentiments_per_device[device_name] = sentiments
 
     # Step 3: Plot sentiments
     plotter = SentimentPlotter()
