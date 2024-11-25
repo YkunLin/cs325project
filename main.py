@@ -31,7 +31,7 @@ class ReviewScraper:
         filename = self.filenames.get(product_series)
         if filename:
             with open(filename, 'a', encoding='utf-8') as file:
-                file.write("\n".join(reviews) + "\n---\n")  # Append reviews to the file with a separator
+                file.write("\n".join(reviews) + "\n")  # Append reviews to the file
         else:
             print(f"No file mapping for product series: {product_series}")
 
@@ -41,10 +41,12 @@ class ReviewScraper:
             urls = file.readlines()
         for url in urls:
             url = url.strip()
-            product_name = url.split('/')[4]
-            product_series = "-".join(product_name.split('-')[:4])  # Get the product series (e.g., Apple Watch Series 7)
-            reviews = self.scrape_reviews(url)
-            self.save_reviews(reviews, product_series)
+            if url:  # Check if the URL line is not empty
+                print(f"Scraping {url}...") #print the URL is being scraped
+                product_name = url.split('/')[4]
+                product_series = "-".join(product_name.split('-')[:4])  # Get the product series (e.g., Apple Watch Series 7)
+                reviews = self.scrape_reviews(url)
+                self.save_reviews(reviews, product_series)
 
 
 class SentimentAnalyzer:
@@ -69,39 +71,39 @@ class SentimentAnalyzer:
         return sentiments
 
 
-class SentimentPlotter:
-    """Class for plotting sentiment results."""
-    @staticmethod
-    def plot_sentiments(sentiments_per_device, output_file):
-        """Plot sentiment distributions."""
-        devices = list(sentiments_per_device.keys())
-        counts = {device: {'positive': 0, 'negative': 0, 'neutral': 0} for device in devices}
+# class SentimentPlotter:
+#     """Class for plotting sentiment results."""
+#     @staticmethod
+#     def plot_sentiments(sentiments_per_device, output_file):
+#         """Plot sentiment distributions."""
+#         devices = list(sentiments_per_device.keys())
+#         counts = {device: {'positive': 0, 'negative': 0, 'neutral': 0} for device in devices}
 
-        # Count sentiments for each device
-        for device, sentiments in sentiments_per_device.items():
-            for sentiment in sentiments:
-                counts[device][sentiment] += 1
+#         # Count sentiments for each device
+#         for device, sentiments in sentiments_per_device.items():
+#             for sentiment in sentiments:
+#                 counts[device][sentiment] += 1
 
-        # Prepare data for plotting
-        positives = [counts[device]['positive'] for device in devices]
-        negatives = [counts[device]['negative'] for device in devices]
-        neutrals = [counts[device]['neutral'] for device in devices]
+#         # Prepare data for plotting
+#         positives = [counts[device]['positive'] for device in devices]
+#         negatives = [counts[device]['negative'] for device in devices]
+#         neutrals = [counts[device]['neutral'] for device in devices]
 
-        # Plot
-        bar_width = 0.2
-        x = range(len(devices))
-        plt.bar(x, positives, width=bar_width, label='Positive', color='green')
-        plt.bar([p + bar_width for p in x], negatives, width=bar_width, label='Negative', color='red')
-        plt.bar([p + 2 * bar_width for p in x], neutrals, width=bar_width, label='Neutral', color='blue')
+#         # Plot
+#         bar_width = 0.2
+#         x = range(len(devices))
+#         plt.bar(x, positives, width=bar_width, label='Positive', color='green')
+#         plt.bar([p + bar_width for p in x], negatives, width=bar_width, label='Negative', color='red')
+#         plt.bar([p + 2 * bar_width for p in x], neutrals, width=bar_width, label='Neutral', color='blue')
 
-        plt.xlabel('Devices')
-        plt.ylabel('Count')
-        plt.title('Sentiment Distribution by Device')
-        plt.xticks([p + bar_width for p in x], devices)
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig(output_file)
-        plt.show()
+#         plt.xlabel('Devices')
+#         plt.ylabel('Count')
+#         plt.title('Sentiment Distribution by Device')
+#         plt.xticks([p + bar_width for p in x], devices)
+#         plt.legend()
+#         plt.tight_layout()
+#         plt.savefig(output_file)
+#         plt.show()
 
 
 def main():
@@ -113,6 +115,11 @@ def main():
         "Apple-Watch-Series-5": "watch5_comments.txt",
         "Apple-Watch-Series-4": "watch4_comments.txt"
     }
+
+    # Clean output files before starting the loop
+    for filename in filenames.values():
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write("")  # Open the file in 'w' mode to clear its content
 
     # Step 1: Scrape reviews
     scraper = ReviewScraper(urls_file='product_URL.txt', filenames=filenames)
@@ -130,9 +137,9 @@ def main():
             device_name = os.path.splitext(file)[0]
             sentiments_per_device[device_name] = sentiments
 
-    # Step 3: Plot sentiments
-    plotter = SentimentPlotter()
-    plotter.plot_sentiments(sentiments_per_device, 'sentiment_plot.png')
+    # # Step 3: Plot sentiments
+    # plotter = SentimentPlotter()
+    # plotter.plot_sentiments(sentiments_per_device, 'sentiment_plot.png')
 
 
 if __name__ == '__main__':
