@@ -1,65 +1,129 @@
-"""
-This program interacts with the phi3 model using the ollama library to generate responses 
-based on prompts read from the 'prompts.txt' file. It then saves the responses to the 'responses.txt' file in a neatly formatted manner, 
-with each response being numbered and wrapped at a specified line width.
-"""
+import os
+import ollama
+import requests
+from bs4 import BeautifulSoup
+import matplotlib.pyplot as plt
 
 
-import ollama #Imports the ollama library, to interact with the phi3 model
-import textwrap #Imports the textwrap module, used to format responses
+class ReviewScraper:
+    """Class for scraping and saving reviews."""
+    def __init__(self, urls_file, output_dir):
+        self.urls_file = urls_file
+        self.output_dir = output_dir
 
-#function to read prompts from the specified file
-def read_prompts(filename):
-    with open(filename, 'r') as file: # Open the file in read mode ('r') and assign it to 'file'
+    def scrape_reviews(self, url):
+        """Scrape reviews from the given URL."""
+        result = requests.get(url)
+        soup = BeautifulSoup(result.text, "html.parser")
+        review_sections = soup.find_all("div", class_="ebay-review-section")
+        reviews = []
+        for section in review_sections:
+            title = section.find("h3", itemprop="name").text.strip()
+            description = section.find("p", itemprop="reviewBody", class_="review-item-content rvw-wrap-spaces")
+            description = description.text.strip() if description else "No Description"
+            if description.endswith("Read full review..."):
+                description = description.replace("Read full review...", "").strip()
+            reviews.append(f"{title}: {description}")
+        return reviews
 
-        prompts = file.readlines() #Reads all lines from the file into a list called "prompts"
+    def save_reviews(self, reviews, filename):
+        """Save reviews to a file."""
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write("\n".join(reviews))
 
-    return [prompt.strip() for prompt in prompts]
-    #loops through each prompt in the list "prompts" and returns a list of cleaned prompts.
+    def run(self):
+        """Scrape and save reviews from all URLs."""
+        with open(self.urls_file, 'r') as file:
+            urls = file.readlines()
+        for url in urls:
+            url = url.strip()
+            product_name = url.split('/')[4]
+            filename = os.path.join(self.output_dir, f"{product_name}_comments.txt")
+            reviews = self.scrape_reviews(url)
+            self.save_reviews(reviews, filename)
 
 
-#function to interact with the phi3 model and get a response for a given prompt.
-def get_phi3_response(prompt):
+class SentimentAnalyzer:
+    """Class for analyzing sentiments using the Phi-3 model."""
+    def __init__(self, model='phi3'):
+        self.model = model
 
-    response = ollama.generate(model='phi3', prompt=prompt) 
-    #Use ollama library to send the given prompt to the phi3 model for generating a response. 
-    #It returns a response in dictionary form
+    def analyze_sentiment(self, comment):
+        """Analyze sentiment for a single comment."""
+        prompt = f"Please tell me whether this comment '{comment}' is positive, negative, or neutral."
+        response = ollama.generate(model=self.model, prompt=prompt)
+        sentiment = response.get('response', '').strip().lower()
+        return sentiment if sentiment in ['positive', 'negative', 'neutral'] else 'neutral'
 
-    return response.get('response','No response')
-    #Extract the 'response' from the dictionary, return 'No response' if the key isn't found.
+    def process_comments_file(self, input_file, output_file):
+        """Process all comments in a file for sentiment analysis."""
+        with open(input_file, 'r', encoding='utf-8') as file:
+            comments = file.readlines()
+        sentiments = [self.analyze_sentiment(comment.strip()) for comment in comments if comment.strip()]
+        with open(output_file, 'w', encoding='utf-8') as file:
+            file.write("\n".join(sentiments))
+        return sentiments
 
 
-#function to save the responses to a file, with each response numbered and formatted
-def save_responses(filename, responses):
+class SentimentPlotter:
+    """Class for plotting sentiment results."""
+    @staticmethod
+    def plot_sentiments(sentiments_per_device, output_file):
+        """Plot sentiment distributions."""
+        devices = list(sentiments_per_device.keys())
+        counts = {device: {'positive': 0, 'negative': 0, 'neutral': 0} for device in devices}
 
-    max_line_length=80 # Set the maximum line length for wrapping text
+        # Count sentiments for each device
+        for device, sentiments in sentiments_per_device.items():
+            for sentiment in sentiments:
+                counts[device][sentiment] += 1
 
-    with open(filename, 'w', encoding='utf-8') as file:  # Open the file in write mode ('w'), assigning it to 'file'.
-        for i, response in enumerate(responses, 1):   # Loop through the 'responses' list, starting from 1 (for numbering).
+        # Prepare data for plotting
+        positives = [counts[device]['positive'] for device in devices]
+        negatives = [counts[device]['negative'] for device in devices]
+        neutrals = [counts[device]['neutral'] for device in devices]
 
-            file.write(f"{i}. ") # Write the response number followed by a period (e.g., "1. ", "2. ").
+        # Plot
+        bar_width = 0.2
+        x = range(len(devices))
+        plt.bar(x, positives, width=bar_width, label='Positive', color='green')
+        plt.bar([p + bar_width for p in x], negatives, width=bar_width, label='Negative', color='red')
+        plt.bar([p + 2 * bar_width for p in x], neutrals, width=bar_width, label='Neutral', color='blue')
 
-            # Wrap text at word boundaries(each line doesn't exceed the 'max_line_length')    
-            wrapped_lines = textwrap.fill(response, width=max_line_length)
-
-            file.write(wrapped_lines + '\n\n')  # Add two newline after each response
-
+        plt.xlabel('Devices')
+        plt.ylabel('Count')
+        plt.title('Sentiment Distribution by Device')
+        plt.xticks([p + bar_width for p in x], devices)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(output_file)
+        plt.show()
 
 
 def main():
+    # Step 1: Scrape reviews
+    scraper = ReviewScraper(urls_file='product_URL.txt', output_dir='comments')
+    scraper.run()
 
-    prompts = read_prompts('prompts.txt') # Read the prompts from the 'prompts.txt' file using 'read_prompts' function
+    # Step 2: Analyze sentiments
+    analyzer = SentimentAnalyzer()
+    sentiments_per_device = {}
+    comments_dir = 'comments'
+    results_dir = 'sentiments'
 
-    responses = [] # Initialize an empty list to store the responses from phi3
+    os.makedirs(results_dir, exist_ok=True)
 
-    for prompt in prompts:  # Loop through each prompt in the 'prompts' list
-        response = get_phi3_response(prompt) # Get a response from the phi3 for the current prompt
-        responses.append(response) # Add the response to the 'responses' list.
+    for file in os.listdir(comments_dir):
+        input_file = os.path.join(comments_dir, file)
+        output_file = os.path.join(results_dir, f"{os.path.splitext(file)[0]}_sentiments.txt")
+        sentiments = analyzer.process_comments_file(input_file, output_file)
+        device_name = os.path.splitext(file)[0]
+        sentiments_per_device[device_name] = sentiments
 
-    save_responses('responses.txt', responses)
-    # Save the responses to 'responses.txt'
+    # Step 3: Plot sentiments
+    plotter = SentimentPlotter()
+    plotter.plot_sentiments(sentiments_per_device, 'sentiment_plot.png')
 
 
-# Standard Python convention to check if the script is being run directly.
 if __name__ == '__main__':
     main()
