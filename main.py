@@ -4,15 +4,14 @@ import requests
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
 
-
 class ReviewScraper:
-    """Class for scraping and saving reviews."""
+    #Class for scraping and saving reviews.
     def __init__(self, urls_file, filenames):
         self.urls_file = urls_file
         self.filenames = filenames  # Pre-existing filenames to save reviews
 
     def scrape_reviews(self, url):
-        """Scrape reviews from the given URL."""
+        #Scrape reviews from the given URL.
         result = requests.get(url)
         soup = BeautifulSoup(result.text, "html.parser")
         review_sections = soup.find_all("div", class_="ebay-review-section")
@@ -27,7 +26,7 @@ class ReviewScraper:
         return reviews
 
     def save_reviews(self, reviews, product_series):
-        """Save reviews to the pre-existing file based on product series."""
+        #Save reviews to the pre-existing .txt file based on product series.
         filename = self.filenames.get(product_series)
         if filename:
             with open(filename, 'a', encoding='utf-8') as file:
@@ -36,7 +35,7 @@ class ReviewScraper:
             print(f"No file mapping for product series: {product_series}")
 
     def run(self):
-        """Scrape and save reviews from all URLs."""
+        #Scrape and save reviews from all URLs.
         with open(self.urls_file, 'r') as file:
             urls = file.readlines()
         for url in urls:
@@ -56,10 +55,22 @@ class SentimentAnalyzer:
 
     def analyze_sentiment(self, comment):
         """Analyze sentiment for a single comment."""
-        prompt = f"Please tell me whether this comment '{comment}' is positive, negative, or neutral."
+        print("comment: ", comment)
+        print("phi-3 is generating responses ....")
+        prompt = f"Classify the sentiment of this comment: '{comment}'. Respond with only one word: 'positive', 'negative', or 'neutral'. Do not include any additional information or follow-up questions."
         response = ollama.generate(model=self.model, prompt=prompt)
-        sentiment = response.get('response', '').strip().lower()
-        return sentiment if sentiment in ['positive', 'negative', 'neutral'] else 'neutral'
+        raw_response = response.get('response', '').strip().lower()
+
+        print("Phi3 response: ", raw_response)
+        # Use find() to determine sentiment
+        if raw_response.find('positive') != -1:
+            return 'positive'
+        elif raw_response.find('negative') != -1:
+            return 'negative'
+        elif raw_response.find('neutral') != -1:
+            return 'neutral'
+        else:
+            return 'neutral'  # Default if sentiment not found
 
     def process_comments_file(self, input_file, output_file):
         """Process all comments in a file for sentiment analysis."""
