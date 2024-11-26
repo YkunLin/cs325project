@@ -59,7 +59,7 @@ class SentimentAnalyzer:
         print("phi-3 is generating responses ....")
         prompt = f"Classify the sentiment of this comment: '{comment}'. Respond with only one word: 'positive', 'negative', or 'neutral'. Do not include any additional information or follow-up questions."
         response = ollama.generate(model=self.model, prompt=prompt)
-        raw_response = response.get('response', '').strip().lower()
+        raw_response = response.get('response', 'No response').strip().lower()
 
         print("Phi3 response: ", raw_response)
         # Use find() to determine sentiment
