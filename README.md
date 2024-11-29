@@ -83,11 +83,11 @@ The graph looks like this:
 
 
 ## Directory Structure
-- Before the project is run:
+- Before project execution:
   
 ![structure](https://github.com/user-attachments/assets/c2a4c696-ab68-4ce7-86d2-0eb288e34a74)
 
-- After the project is finished running:
+- After project execution:
   
 ![outputs](https://github.com/user-attachments/assets/d64eb268-69a9-4467-9199-4f5c202505be)
 
