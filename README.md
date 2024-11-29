@@ -5,9 +5,10 @@ This project performs sentiment analysis on customer reviews for various Apple W
 
 ## Table of Contents
 - [Features](#features)
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Project Workflow](#project-workflow)
+- [Expected outputs](#expected-outputs)
 - [Directory Structure](#directory-structure)
 
 ## Features
@@ -35,24 +36,38 @@ Follow these steps to set up the project:
         test_review_scraper.py
         test_sentiment_analyzer.py
         test_sentiment_plotter.py
-        watch4_comments.txt
-        watch5_comments.txt
-        watch6_comments.txt
-        watch7_comments.txt
-        watch8_comments.txt
+        watch4_comments.txt     (Initially it is blank)
+        watch5_comments.txt     (Initially it is blank)
+        watch6_comments.txt     (Initially it is blank)
+        watch7_comments.txt     (Initially it is blank)
+        watch8_comments.txt     (Initially it is blank)
         
 
-2. Use conda to create the environment from the requirements.yaml file.
+2. Use conda to create the environment from the requirement.yaml file.
 
-
-   command: conda env create -f requirements.yaml
+        command: conda env create -f requirement.yaml
 
 3. Activate the environment
 
-
-   command: conda activate env1
-
+        command: conda activate env1
 
 
-## Run project
-    command: python main.py
+## Usage
+Run the main.py script to execute the project workflow:
+        command: python main.py
+
+The workflow includes:
+        1. Restarting the Phi-3 model.
+        2. Scraping product reviews and save them to the five comment files "<device>_comments.txt".
+        3. Performing sentiment analysis.
+        4. Create five output files "<device>_comments_sentiments.txt" and save the sentiment of each comment to the files.
+        4. Plotting the sentiment results and save the image to the working directory.
+
+## Expected outputs
+- Product reviews will be saved to the five <device>_comments.txt files that already exist.
+- Sentiments are saved in files named "<device>_comments_sentiments.txt"
+- A graphical summary is saved as sentiment_plot.png
+
+## Directory Structure
+![structure](https://github.com/user-attachments/assets/c2a4c696-ab68-4ce7-86d2-0eb288e34a74)
+
