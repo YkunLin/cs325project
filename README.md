@@ -70,10 +70,22 @@ Follow these steps to set up the project:
         4. Plotting the sentiment results and save the image to the working directory.
 
 ## Expected outputs
-- Product reviews will be saved to the five "<device>_comments.txt" files that already exist.
-- Sentiments are saved in files named "<device>_comments_sentiments.txt"
-- A graphical summary is saved as "sentiment_plot.png"
+
+        1. Product reviews will be saved to the five "<device>_comments.txt" files that already exist.
+  
+        2. Sentiments are saved in files named "<device>_comments_sentiments.txt"
+  
+        3. A graphical summary is saved as "sentiment_plot.png"
+
+The graph looks like this:
+![sentiment_plot](https://github.com/user-attachments/assets/f5f742b5-40e2-4c22-a4f9-4811d3266aa3)
+
 
 ## Directory Structure
+- Before the project is run:
 ![structure](https://github.com/user-attachments/assets/c2a4c696-ab68-4ce7-86d2-0eb288e34a74)
+
+- After the project is finished running:
+![outputs](https://github.com/user-attachments/assets/d64eb268-69a9-4467-9199-4f5c202505be)
+
 
