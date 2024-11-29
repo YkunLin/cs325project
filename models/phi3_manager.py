@@ -1,10 +1,11 @@
 import subprocess
 
+
+#A class to manage the phi3 model
 class Phi3Manager:
-    """A class to manage the phi3 model."""
     @staticmethod
     def restart_model():
-        """Stops the phi3 model to ensure it restarts fresh."""
+        #Stops the phi3 model to ensure it restarts fresh
         try:
             # Run the 'ollama stop phi3' command
             subprocess.run(["ollama", "stop", "phi3"], check=True)

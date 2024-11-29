@@ -2,9 +2,9 @@ import subprocess
 import time
 from models.phi3_manager import Phi3Manager
 
-
+#Test if the Phi3Manager can stop a running Phi3 model
 def test_restart_model():
-    """Test if the Phi3Manager can stop a running Phi3 model."""
+
     # Step 1: Start the Phi3 model
     try:
         subprocess.run(["ollama", "run", "phi3"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

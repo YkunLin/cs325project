@@ -33,13 +33,14 @@ def main():
     analyzer = SentimentAnalyzer()
     sentiments_per_device = {}
 
+    # Loop through all files in the current directory
     for file in os.listdir():
-        if file.endswith("_comments.txt"):
+        if file.endswith("_comments.txt"):  # find comment files
             input_file = file
-            output_file = f"{os.path.splitext(file)[0]}_sentiments.txt"
-            sentiments = analyzer.process_comments_file(input_file, output_file)
-            device_name = os.path.splitext(file)[0].split('_')[0]
-            sentiments_per_device[device_name] = sentiments
+            output_file = f"{os.path.splitext(file)[0]}_sentiments.txt" # Output file for sentiments.
+            sentiments = analyzer.process_comments_file(input_file, output_file)    # Analyze sentiments
+            device_name = os.path.splitext(file)[0].split('_')[0]      # Extract the device name from the file name (e.g., "watch8" from "watch8_comments.txt").
+            sentiments_per_device[device_name] = sentiments     # Store the sentiments in the dictionary under the corresponding device name.
 
     # Step 3: Plot sentiments
     plotter = SentimentPlotter()

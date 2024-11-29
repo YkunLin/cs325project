@@ -1,10 +1,12 @@
 import matplotlib.pyplot as plt
 
+
+#Class for plotting sentiment results
 class SentimentPlotter:
-    """Class for plotting sentiment results."""
+
     @staticmethod
     def plot_sentiments(sentiments_per_device, output_file):
-        """Plot sentiment distributions."""
+        #Plot sentiment distributions
         devices = list(sentiments_per_device.keys())
         counts = {device: {'positive': 0, 'negative': 0, 'neutral': 0} for device in devices}
 

@@ -1,8 +1,10 @@
 from unittest.mock import patch, MagicMock
 from scraping.review_scraper import ReviewScraper
 
+
+#Test the scrape_reviews method returns reviews from a valid URL
 def test_scrape_reviews():
-    """Test the scrape_reviews method returns reviews from a valid URL."""
+    
     # Mock the requests.get to return a fake response
     fake_html = """
     <html>

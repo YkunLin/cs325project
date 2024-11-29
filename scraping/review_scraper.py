@@ -1,20 +1,25 @@
-
 import requests
 from bs4 import BeautifulSoup
 
-
+#Class for scraping and saving reviews.
 class ReviewScraper:
-    #Class for scraping and saving reviews.
     def __init__(self, urls_file, filenames):
         self.urls_file = urls_file
-        self.filenames = filenames  # Pre-existing filenames to save reviews
-
+        self.filenames = filenames  # Pre-existing filenames(watch?_commments.txt) to save reviews
+    
+    """Scrape reviews from the given URL"""
     def scrape_reviews(self, url):
-        #Scrape reviews from the given URL.
+        # Make a GET request to the specified URL
         result = requests.get(url)
+
+        # Parse the HTML content of the page using BeautifulSoup
         soup = BeautifulSoup(result.text, "html.parser")
+
+        # Find all review sections on the page and Create a list to hold all reviews
         review_sections = soup.find_all("div", class_="ebay-review-section")
         reviews = []
+
+         # Loop through each review section to extract title and description
         for section in review_sections:
             title = section.find("h3", itemprop="name").text.strip()
             description = section.find("p", itemprop="reviewBody", class_="review-item-content rvw-wrap-spaces")
@@ -29,7 +34,7 @@ class ReviewScraper:
         filename = self.filenames.get(product_series)
         if filename:
             with open(filename, 'a', encoding='utf-8') as file:
-                file.write("\n".join(reviews) + "\n")  # Append reviews to the file
+                file.write("\n".join(reviews) + "\n")  # Append reviews to the comment files
         else:
             print(f"No file mapping for product series: {product_series}")
 

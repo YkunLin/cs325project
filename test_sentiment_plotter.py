@@ -3,7 +3,7 @@ import pytest
 from analysis.sentiment_plotter import SentimentPlotter
 
 def test_plot_sentiments():
-    """Test that the plot_sentiments method creates a plot without errors."""
+    # Test that the plot_sentiments method creates a plot without errors
     sentiments_per_device = {
         'Apple Watch Series 7': ['positive', 'negative', 'neutral', 'positive'],
         'Apple Watch Series 8': ['negative', 'positive', 'neutral', 'neutral'],
