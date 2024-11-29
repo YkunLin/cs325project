@@ -53,14 +53,18 @@ Follow these steps to set up the project:
 
 
 ## Usage
-Run the main.py script to execute the project workflow:
+- Run the main.py script to execute the project workflow:
         command: python main.py
 
-The workflow includes:
+- The workflow includes:
         1. Restarting the Phi-3 model.
+  
         2. Scraping product reviews and save them to the five comment files "<device>_comments.txt".
+  
         3. Performing sentiment analysis.
+  
         4. Create five output files "<device>_comments_sentiments.txt" and save the sentiment of each comment to the files.
+  
         4. Plotting the sentiment results and save the image to the working directory.
 
 ## Expected outputs
