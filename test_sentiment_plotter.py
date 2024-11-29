@@ -13,9 +13,9 @@ def test_plot_sentiments():
     # Since we are only testing if the plot function works, we just check for the absence of errors
     try:
         plotter.plot_sentiments(sentiments_per_device, 'test_sentiment_plot.png')
-        assert os.path.exists('sentiment_plot.png')  # Check that the plot file was created
+        assert os.path.exists('test_sentiment_plot.png')  # Check that the plot file was created
     except Exception as e:
         pytest.fail(f"Plotting raised an exception: {e}")
     finally:
-        if os.path.exists('sentiment_plot.png'):
+        if os.path.exists('test_sentiment_plot.png'):
             os.remove('test_sentiment_plot.png')  # Clean up the plot file
