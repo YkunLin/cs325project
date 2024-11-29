@@ -28,7 +28,7 @@ This project performs sentiment analysis on customer reviews for various Apple W
 - **Result Visualization**: Plots and saves sentiment results in a graphical format.
 
 ## prerequisites
-- Install Conda
+- Conda installed on your system
 - phi-3 model installed and running locally on your machine.
 
 
