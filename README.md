@@ -14,11 +14,11 @@ This project performs sentiment analysis on customer reviews for various Apple W
 - [Additional Notes](#additional-notes)
 
 ## Design Principles
-This project incorporates the Open-Closed Principle (OCP) from SOLID design principles to ensure extensibility without modifying existing code:
+#### This project incorporates the Open-Closed Principle (OCP) from SOLID design principles to ensure extensibility without modifying existing code:
 - Open for Extension: The project design allows easy addition of new features like new analysis or plotting methods by creating new modules or extending classes.
 - Closed for Modification: Existing functionality can be reused or extended without altering the existing codebase, ensuring stability and reducing the risk of introducing bugs.
 
-### Examples of OCP in the Project:
+#### Examples of OCP in the Project:
 - Modular Structure: Each task (scraping, analyzing, and plotting) is implemented in its own class/module. Adding new scraping or analysis methods is as simple as creating new modules without affecting the rest of the system.
 - Reusable Components: The SentimentAnalyzer class can easily be extended to use a different sentiment model by overriding or adding new methods.
 
