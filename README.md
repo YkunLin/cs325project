@@ -79,6 +79,11 @@ Follow these steps to set up the project:
         4. Create five output files "<device>_comments_sentiments.txt" and save the sentiment of each comment to the files.
   
         4. Plotting the sentiment results and save the image to the working directory.
+  
+#### Test Case Usage
+Unit tests for the project are written using pytest. These test cases ensure that the modules work as expected and can be run with the following command:
+
+        pytest <test_filename>
 
 ## Expected outputs
 
