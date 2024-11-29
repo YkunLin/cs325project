@@ -108,6 +108,7 @@ The graph looks like this:
 ![outputs](https://github.com/user-attachments/assets/d64eb268-69a9-4467-9199-4f5c202505be)
 
 ## Additional Notes
+- Phi-3 sometimes generates very long responses, so if the project is stuck at "phi-3 is generating responses ...." while running , please be patient and wait for it to generate.
 - Running the project generates five output files and one image and saves the extracted product comments to the "_comments.txt" files. if the project is run repeatedly, these six files will be replaced instead of generating another duplicate six files. (To avoid generating too many output files when running repeatedly)
 
 
