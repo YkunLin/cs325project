@@ -18,4 +18,4 @@ def test_plot_sentiments():
         pytest.fail(f"Plotting raised an exception: {e}")
     finally:
         if os.path.exists('sentiment_plot.png'):
-            os.remove('sentiment_plot.png')  # Clean up the plot file
+            os.remove('test_sentiment_plot.png')  # Clean up the plot file
