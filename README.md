@@ -56,17 +56,17 @@ Follow these steps to set up the project:
 
 2. Use conda to create the environment from the requirement.yaml file.
 
-        command: conda env create -f requirement.yaml
+        conda env create -f requirement.yaml
 
 3. Activate the environment
 
-        command: conda activate env1
+        conda activate env1
 
 
 ## Usage
 - Run the main.py script to execute the project workflow:
   
-         command: python main.py
+         python main.py
 
 - The workflow includes:
 
