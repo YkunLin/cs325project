@@ -54,9 +54,11 @@ Follow these steps to set up the project:
 
 ## Usage
 - Run the main.py script to execute the project workflow:
-        command: python main.py
+  
+         command: python main.py
 
 - The workflow includes:
+
         1. Restarting the Phi-3 model.
   
         2. Scraping product reviews and save them to the five comment files "<device>_comments.txt".
